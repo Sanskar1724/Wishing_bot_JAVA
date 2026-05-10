@@ -1,8 +1,0 @@
-com\example\familybot\FamilyWishingBotApplication.class
-com\example\familybot\controller\FamilyController.class
-com\example\familybot\repository\FamilyRepository.class
-com\example\familybot\model\Contact.class
-com\example\familybot\model\DashboardRow.class
-com\example\familybot\repository\ContactRepository.class
-com\example\familybot\model\Family.class
-com\example\familybot\service\FamilyService.class
