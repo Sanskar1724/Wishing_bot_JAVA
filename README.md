@@ -49,6 +49,9 @@ Required for deployment:
 - `DB_PASSWORD`
 - `PORT` (Railway sets this automatically)
 
+Railway note: if you do not set `DB_URL`/`DB_USERNAME`/`DB_PASSWORD`, the app will also read
+`MYSQLHOST`, `MYSQLPORT`, `MYSQLDATABASE`, `MYSQLUSER`, `MYSQLPASSWORD` from Railway.
+
 Local defaults are defined in [src/main/resources/application.properties](src/main/resources/application.properties).
 
 ## Run Locally
