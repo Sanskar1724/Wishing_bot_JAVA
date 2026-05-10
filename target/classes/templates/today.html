@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Today's Celebrations</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 th:text="${family != null ? family.familyName : 'Today'}"></h1>
+
+      <div class="cards">
+        <div class="card small">
+          <div class="card-title">Total Members</div>
+          <div class="card-value" th:text="${totalMembers}"></div>
+        </div>
+        <div class="card small">
+          <div class="card-title">Birthdays Today</div>
+          <div class="card-value" th:text="${birthdayCount}"></div>
+        </div>
+        <div class="card small">
+          <div class="card-title">Anniversaries Today</div>
+          <div class="card-value" th:text="${anniversaryCount}"></div>
+        </div>
+      </div>
+
+      <div class="card" th:if="${error}">
+        <p class="error" th:text="${error}"></p>
+        <a href="/create-family" class="link-button">Create New Family</a>
+      </div>
+
+      <div class="card" th:if="${rows}">
+        <div class="toolbar">
+          <a class="link-button" th:href="@{/dashboard/{code}(code=${family.joinCode})}">Full Members</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Number</th>
+              <th>Birthday</th>
+              <th>Anniversary</th>
+              <th>Status</th>
+              <th>Message</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              th:each="row, i : ${rows}"
+              th:classappend="${row.birthdayToday or row.anniversaryToday} ? 'highlight' : ''"
+            >
+              <td th:text="${row.contact.fullName}"></td>
+              <td th:text="${row.contact.phone}"></td>
+              <td th:text="${row.contact.dob != null ? row.contact.dob : '-'}"></td>
+              <td th:text="${row.contact.anniversary != null ? row.contact.anniversary : '-'}"></td>
+              <td>
+                <span th:if="${row.birthdayToday}">&#x1F382; Birthday </span>
+                <span th:if="${row.anniversaryToday}"
+                  >&#x1F48D; Anniversary</span
+                >
+              </td>
+              <td>
+                <input
+                  class="msg-input"
+                  type="text"
+                  placeholder="Type your wish"
+                  th:attr="data-phone=${row.contact.phone}"
+                  th:value="${#lists.isEmpty(row.messages) ? '' : row.messages[0]}"
+                />
+              </td>
+              <td>
+                <a class="link-button wish-button" href="#" target="_blank">Wish</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      function updateWishLinks() {
+        const tableRows = document.querySelectorAll("tbody tr");
+        tableRows.forEach((row) => {
+          const input = row.querySelector(".msg-input");
+          const button = row.querySelector(".wish-button");
+          if (!input || !button) {
+            return;
+          }
+          const phone = input.getAttribute("data-phone");
+          const msg = input.value || "";
+          const link =
+            "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg);
+          button.setAttribute("href", link);
+        });
+      }
+
+      document.querySelectorAll(".msg-input").forEach((input) => {
+        input.addEventListener("input", updateWishLinks);
+      });
+      updateWishLinks();
+    </script>
+  </body>
+</html>

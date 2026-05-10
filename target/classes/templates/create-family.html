@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create Family</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Family Wishing Bot</h1>
+
+      <div class="card">
+        <h2>Create Family</h2>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        <form method="post" action="/create-family">
+          <label>Family Name</label>
+          <input
+            type="text"
+            name="familyName"
+            placeholder="Patil Family"
+            required
+            th:value="${familyName}"
+          />
+          <button type="submit">Generate Family Link</button>
+        </form>
+
+        <div th:if="${joinLink}" class="result">
+          <p><strong>Share this link:</strong></p>
+          <input
+            id="joinLinkInput"
+            type="text"
+            th:value="${joinLink}"
+            readonly
+          />
+          <p class="muted">Open the link to add family members.</p>
+          <div class="toolbar">
+            <a th:href="${joinLink}" class="link-button">Open Join Page</a>
+            <button type="button" class="link-button" id="copyJoinLink">
+              Copy Link
+            </button>
+            <span class="muted" id="copyStatus"></span>
+          </div>
+          <p class="muted" th:if="${reused}">
+            Existing family found. Link reused.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const copyButton = document.getElementById("copyJoinLink");
+      if (copyButton) {
+        copyButton.addEventListener("click", async () => {
+          const input = document.getElementById("joinLinkInput");
+          const status = document.getElementById("copyStatus");
+          try {
+            await navigator.clipboard.writeText(input.value);
+            status.textContent = "Copied";
+          } catch (err) {
+            input.select();
+            document.execCommand("copy");
+            status.textContent = "Copied";
+          }
+          setTimeout(() => {
+            status.textContent = "";
+          }, 1500);
+        });
+      }
+    </script>
+  </body>
+</html>

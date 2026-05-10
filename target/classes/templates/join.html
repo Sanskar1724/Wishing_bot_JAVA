@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Join Family</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Join Family</h1>
+
+      <div class="card" th:if="${error}">
+        <p class="error" th:text="${error}"></p>
+        <a href="/create-family" class="link-button">Create New Family</a>
+      </div>
+
+      <div class="card" th:if="${family}">
+        <h2 th:text="${family.familyName}"></h2>
+        <div class="toolbar">
+          <a class="link-button" th:href="@{/dashboard/{code}(code=${family.joinCode})}">View Full Members</a>
+          <a class="link-button" th:href="@{/dashboard/{code}/today(code=${family.joinCode})}">Today's Birthdays/Anniversaries</a>
+        </div>
+        <div th:if="${alreadyJoined}" class="info">
+          Already joined. Open dashboard from the link above.
+        </div>
+        <div th:if="${errors}" class="error-list">
+          <ul>
+            <li th:each="err : ${errors}" th:text="${err}"></li>
+          </ul>
+        </div>
+        <form
+          method="post"
+          th:action="@{/join/{code}(code=${family.joinCode})}"
+        >
+          <label>First Name</label>
+          <input
+            type="text"
+            name="firstName"
+            required
+            th:value="${firstName}"
+          />
+
+          <label>Surname</label>
+          <input type="text" name="surname" th:value="${surname}" />
+
+          <label>Phone Number</label>
+          <input
+            type="text"
+            name="phone"
+            placeholder="91xxxxxxxxxx"
+            required
+            th:value="${phone}"
+          />
+
+          <label>Birthday</label>
+          <input type="date" name="dob" required th:value="${dob}" />
+
+          <label>Anniversary (optional)</label>
+          <input type="date" name="anniversary" th:value="${anniversary}" />
+
+          <button type="submit">Join Family</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
